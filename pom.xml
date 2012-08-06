@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>se.pagero</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.20</version>
+    </parent>
+
+    <!--<scm>
+        <connection>scm:git:ssh://git@vpogit/pagerolib/schematron-provider</connection>
+    </scm>-->
+
+    <properties>
+        <maven.shade.plugin.version>1.6</maven.shade.plugin.version>
+    </properties>
+
+    <name>Schematron Provider</name>
+    <groupId>com.pagero.schematron</groupId>
+    <artifactId>schematron-provider</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+
+    <modules>
+		<module>common</module>
+        <module>ehf</module>
+        <module>oioubl</module>
+        <module>test</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>se.pagero</groupId>
+                <artifactId>schematron</artifactId>
+                <version>1.0</version>
+            </dependency>
+        
+            <!--<dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven.shade.plugin.version}</version>
+            </dependency>-->
+            
+
+            <!-- TEST dependencies -->
+           
+            <dependency>
+                <groupId>org.easytesting</groupId>
+                <artifactId>fest-assert</artifactId>
+                <version>1.4</version>
+                <scope>test</scope>
+            </dependency>
+            
+        </dependencies>
+    </dependencyManagement>
+</project>
