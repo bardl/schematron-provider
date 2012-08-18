@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>se.pagero</groupId>
-            <artifactId>schematron</artifactId>
+            <artifactId>schematron-validator</artifactId>
         </dependency>
 
     </dependencies>

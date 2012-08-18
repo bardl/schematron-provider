@@ -1,36 +1,40 @@
 package com.pagero.schematron;
 
 import com.sun.org.apache.xerces.internal.dom.DOMInputImpl;
+import org.apache.log4j.Logger;
+import org.schematron.validation.SchematronErrorHandler;
+import org.schematron.validation.SchematronSchemaFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
-import se.pagero.schematron.validation.SchematronErrorHandler;
-import se.pagero.schematron.validation.SchematronSchemaFactory;
-
-import java.io.InputStream;
-import java.util.ServiceLoader;
 
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public abstract class SchematronProvider {
 
-    public static void writeProviders() {
-        ServiceLoader<SchematronProvider> ldr = ServiceLoader.load(SchematronProvider.class);
-        for (SchematronProvider provider : ldr) {
-            System.out.println(provider.getClass().getSimpleName());
-        }
-        throw new Error ("No SchematronProviders registered");
-    }
+    static Logger LOG = Logger.getLogger(SchematronProvider.class);
 
-    public Validator setupValidator() throws SAXException {
+    public abstract String getId();
+
+    public abstract String getSchematronPath();
+
+    public abstract String getSchematronEncoding();
+
+    public Validator setupValidator(String mainSchemaName) throws SAXException {
         final String schematronPath = getSchematronPath();
 
         SchematronErrorHandler errorHandler = new SchematronErrorHandler();
 
-        SchemaFactory factory = new SchematronSchemaFactory();
-        factory.setErrorHandler(errorHandler);
+        SchematronSchemaFactory factory = new SchematronSchemaFactory();
+        factory.setCompileSchematron(false);
+        factory.setErrorHandler(errorHandler);        
         factory.setResourceResolver(new LSResourceResolver() {
 
             public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
@@ -38,12 +42,37 @@ public abstract class SchematronProvider {
                 return new DOMInputImpl(publicId, systemId, baseURI, inputStream, getSchematronEncoding());
             }
         });
-
-        InputStream mainSchema = getClass().getClassLoader().getResourceAsStream(schematronPath + "NORWAY-UBL-T10.sch");
+        try {
+            String message = "Loading schematron validator resource [" + getClass().getClassLoader().getResource("").getPath() + schematronPath + mainSchemaName + "].";
+            FileOutputStream fos = new FileOutputStream("c:\\fff.txt");
+            fos.write(message.getBytes());
+            fos.close();
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            try {
+                FileOutputStream fos = new FileOutputStream("c:\\fff.txt");
+                fos.write(sw.toString().getBytes());
+                fos.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        System.out.println("Loading schematron validator resource [" + getClass().getClassLoader().getResource("").getPath() + schematronPath + mainSchemaName + "].");
+        InputStream mainSchema = getClass().getClassLoader().getResourceAsStream(schematronPath + mainSchemaName);
         return factory.newSchema(new StreamSource(mainSchema)).newValidator();
     }
 
-    public abstract String getSchematronPath();
+    public Validator getInvoiceValidator() throws SAXException {
+        return new NullValidator();
+    }
 
-    public abstract String getSchematronEncoding();
+    public Validator getCreditNoteValidator() throws SAXException {
+        return new NullValidator();
+    }
+    
+    public Validator getReminderValidator() throws SAXException {
+        return new NullValidator();
+    }
 }
