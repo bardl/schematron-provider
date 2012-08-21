@@ -4,7 +4,7 @@
     <parent>
 		<groupId>com.pagero.schematron</groupId>
 		<artifactId>schematron-provider</artifactId>
-		<version>1.0</version>
+		<version>1.1-SNAPSHOT</version>
     </parent>
 
     <name>SchematronProvider :: OIOUBL</name>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>com.pagero.schematron</groupId>
             <artifactId>schematron-provider-common</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
